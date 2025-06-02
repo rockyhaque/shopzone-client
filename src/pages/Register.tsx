@@ -25,7 +25,7 @@ export default function RegisterForm() {
       username: data.username,
       password: data.password,
       shops: data.shops.split(",").map((shop: string) => shop.trim()),
-      role: "user"
+      role: "user",
     };
 
     try {
@@ -43,6 +43,11 @@ export default function RegisterForm() {
       if (res.ok) {
         toast.success("Account created successfully!");
         reset();
+
+        // Redirect to login page
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1500);
       } else {
         toast.error("Registration failed!");
       }
