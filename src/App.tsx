@@ -9,6 +9,7 @@ function App() {
   return (
     <div>
       <Toaster richColors />
+      <h2>Home page</h2>
       <Routes>
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<Login />} />

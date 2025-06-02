@@ -225,7 +225,7 @@ export default function RegisterForm() {
           {/* Footer */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="#" className="font-medium text-sky-600 hover:text-sky-500">
+            <a href="/login" className="font-medium text-sky-600 hover:text-sky-500">
               Sign in here
             </a>
           </p>
