@@ -50,7 +50,7 @@ const Login = () => {
       });
 
       toast.success("Login successful!");
-      window.location.href = "/"; // Or any protected route
+      window.location.href = "/dashboard"; 
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong!");
@@ -182,6 +182,16 @@ const Login = () => {
             )}
           </button>
         </form>
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-600">
+          Don't have an account?{" "}
+          <a
+            href="/register"
+            className="font-medium text-sky-600 hover:text-sky-500"
+          >
+            Register here
+          </a>
+        </p>
       </div>
     </div>
   );
