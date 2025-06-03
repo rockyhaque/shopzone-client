@@ -6,6 +6,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import NotFound from "./pages/NotFound";
+import ShopDashboard from "./components/ShopDashboard";
 
 function App() {
   // const location = useLocation();
@@ -17,8 +18,11 @@ function App() {
       {/* {!isAuthPage && <Dashboard></Dashboard>} */}
 
       <Routes>
+        {/* Public routes */}
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<Login />} />
+        
+        {/* Protected routes */}
         <Route
           path="/dashboard"
           element={
@@ -27,6 +31,18 @@ function App() {
             </PrivateRoute>
           }
         />
+        
+        {/* Shop subdomain route - should be protected */}
+        <Route
+          path="/shop/:shopName"
+          element={
+            <PrivateRoute>
+              <ShopDashboard />
+            </PrivateRoute>
+          }
+        />
+        
+        {/* Catch-all routes */}
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

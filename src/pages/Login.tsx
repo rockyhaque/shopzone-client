@@ -45,8 +45,11 @@ const Login = () => {
       const expires = data.rememberMe ? 7 : 0.0208; // 30 minutes = 30/1440 ≈ 0.0208
 
       Cookies.set("token", token, {
+        domain: '.localhost', 
         expires,
-        path: "/",
+        secure: process.env.NODE_ENV === 'production',
+        // path: "/",
+        sameSite: 'lax'
       });
 
       toast.success("Login successful!");

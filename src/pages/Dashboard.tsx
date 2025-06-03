@@ -8,9 +8,10 @@ import Swal from "sweetalert2";
 
 const Dashboard = () => {
   const [user, setUser] = useState<IDecodedUser | null>(null);
+  const [shops, setShops] = useState<string[] | null>(null);
+  const [showShops, setShowShops] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  // console.log(user)
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -20,11 +21,18 @@ const Dashboard = () => {
         setUser(decoded);
       } catch (error) {
         console.error("Invalid token", error);
+        navigate("/login");
       }
     } else {
-      navigate("/login"); // If no token, redirect to login
+      navigate("/login");
     }
   }, [navigate]);
+
+  const handleShopClick = (shopName: string) => {
+    // Remove any special characters from shop name for subdomain
+    const cleanShopName = shopName.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+    window.location.href = `http://${cleanShopName}.localhost:5173`;
+  };
 
   const handleLogout = () => {
     Swal.fire({
@@ -32,7 +40,7 @@ const Dashboard = () => {
       text: "You will be logged out from this session.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#0ea5e9", // sky blue
+      confirmButtonColor: "#0ea5e9",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, logout!",
       cancelButtonText: "Cancel",
@@ -51,19 +59,78 @@ const Dashboard = () => {
     });
   };
 
+  const handleProfileClick = async () => {
+    setShowShops(true);
+    const token = Cookies.get("token");
+    if (!token || !user?.username) return;
+
+    try {
+      const res = await fetch(
+        `https://shopzone-server.vercel.app/api/shop/my-shop/${user.username}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setShops(data.data.shops);
+      } else {
+        setShops([]);
+      }
+    } catch (err) {
+      console.error("Error fetching shops", err);
+    }
+  };
+
   return (
-    <div className="p-4 flex items-center justify-between bg-gray-100">
-      <div className="flex items-center gap-2">
-        <User className="text-2xl text-gray-700" />
-        <span className="text-gray-800 font-medium">{user?.username}</span>
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Sidebar */}
+      <div className="w-full md:w-64 bg-blue-600 text-white p-4">
+        <div
+          onClick={handleProfileClick}
+          className="flex items-center gap-2 cursor-pointer hover:bg-blue-500 p-2 rounded"
+        >
+          <User />
+          <span>{user?.username}</span>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="mt-4 flex items-center gap-1 bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </button>
       </div>
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-      >
-        <LogOut className="w-4 h-4" />
-        Logout
-      </button>
+
+      {/* Main Content */}
+      <div className="flex-1 p-4 bg-gray-100">
+        <h2 className="text-xl font-semibold mb-4">Dashboard</h2>
+
+        {showShops ? (
+          <div>
+            <h3 className="text-lg font-medium mb-2">My Shops:</h3>
+            {shops && shops.length > 0 ? (
+              <ul className="list-disc pl-5">
+                {shops.map((shop, index) => (
+                  <li 
+                    key={index}
+                    className="cursor-pointer hover:text-blue-600 hover:underline"
+                    onClick={() => handleShopClick(shop)}
+                  >
+                    {shop}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No shops found.</p>
+            )}
+          </div>
+        ) : (
+          <p className="text-gray-600">Welcome to Dashboard</p>
+        )}
+      </div>
     </div>
   );
 };
