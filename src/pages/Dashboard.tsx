@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { LogOut, User } from "lucide-react";
+import { LogOut, RotateCw, User } from "lucide-react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import type { IDecodedUser } from "../types/IUser";
@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<IDecodedUser | null>(null);
   const [shops, setShops] = useState<string[] | null>(null);
   const [showShops, setShowShops] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   const handleShopClick = (shopName: string) => {
     // Remove any special characters from shop name for subdomain
-    const cleanShopName = shopName.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+    const cleanShopName = shopName.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
     window.location.href = `http://${cleanShopName}.localhost:5173`;
   };
 
@@ -114,7 +114,7 @@ const Dashboard = () => {
             {shops && shops.length > 0 ? (
               <ul className="list-disc pl-5">
                 {shops.map((shop, index) => (
-                  <li 
+                  <li
                     key={index}
                     className="cursor-pointer hover:text-blue-600 hover:underline"
                     onClick={() => handleShopClick(shop)}
@@ -124,7 +124,13 @@ const Dashboard = () => {
                 ))}
               </ul>
             ) : (
-              <p>No shops found.</p>
+              // <p>No shops found.</p>
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                  <RotateCw className="w-8 h-8 animate-spin text-blue-600 mb-2" />
+                  <p>Verifying your session...</p>
+                </div>
+              </div>
             )}
           </div>
         ) : (

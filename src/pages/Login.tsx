@@ -45,15 +45,18 @@ const Login = () => {
       const expires = data.rememberMe ? 7 : 0.0208; // 30 minutes = 30/1440 ≈ 0.0208
 
       Cookies.set("token", token, {
-        domain: '.localhost', 
+        domain:
+          window.location.hostname === "localhost"
+            ? "localhost"
+            : ".yourdomain.com",
         expires,
-        secure: process.env.NODE_ENV === 'production',
-        // path: "/",
-        sameSite: 'lax'
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
       });
 
       toast.success("Login successful!");
-      window.location.href = "/dashboard"; 
+      window.location.href = "/dashboard";
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong!");
