@@ -18,7 +18,16 @@ const ShopDashboard = () => {
     setShopName(currentShop);
 
     // Verify token
-    const token = Cookies.get("token");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const token = Cookies.get("token" , {domain: 'localhost'});
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    Cookies.set("token" , {domain: 'localhost'})
+
+    console.log("sub token", token)
+  
     
     if (!token) {
       navigate("/login");
@@ -29,7 +38,6 @@ const ShopDashboard = () => {
       const decoded = jwtDecode<IDecodedUser>(token);
       setUser(decoded);
       
-      // In a real app, you would verify with backend here
       // await verifyTokenWithBackend(token);
       
       setLoading(false);

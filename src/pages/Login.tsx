@@ -42,17 +42,20 @@ const Login = () => {
       }
 
       const token = result.token;
+
       const expires = data.rememberMe ? 7 : 0.0208; // 30 minutes = 30/1440 ≈ 0.0208
 
       Cookies.set("token", token, {
         domain:
           window.location.hostname === "localhost"
-            ? "localhost"
-            : ".yourdomain.com",
+            ? ".localhost"
+            : ".shopzone-teal.vercel.app",
+        // domain: ".shopzone.local",
         expires,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        // sameSite: "lax",
         path: "/",
+        // httpOnly: true
       });
 
       toast.success("Login successful!");

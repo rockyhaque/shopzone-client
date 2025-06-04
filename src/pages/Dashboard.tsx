@@ -14,7 +14,11 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const token = Cookies.get("token" , {domain: 'localhost'});
+
+    console.log("main token", token)
     if (token) {
       try {
         const decoded = jwtDecode<IDecodedUser>(token);
@@ -61,7 +65,11 @@ const Dashboard = () => {
 
   const handleProfileClick = async () => {
     setShowShops(true);
-    const token = Cookies.get("token");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const token = Cookies.get("token" , {domain: 'localhost'});
+
+    console.log("main token 2", token)
     if (!token || !user?.username) return;
 
     try {
